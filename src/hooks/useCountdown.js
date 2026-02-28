@@ -1,20 +1,32 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export const useCountdown = () => {
     const [count, setCount] = useState(null);
+    const onCompleteRef = useRef(null);
     const timerRef = useRef(null);
 
+    useEffect(() => {
+        if (count === 0) {
+            onCompleteRef.current?.();
+            setCount(null);
+        }
+    }, [count]);
+
     const startCountdown = useCallback((seconds, onComplete) => {
+        onCompleteRef.current = onComplete;
         setCount(seconds);
 
         if (timerRef.current) clearInterval(timerRef.current);
 
         timerRef.current = setInterval(() => {
             setCount((prev) => {
+                if (prev === null) {
+                    clearInterval(timerRef.current);
+                    return null;
+                }
                 if (prev <= 1) {
                     clearInterval(timerRef.current);
-                    if (onComplete) onComplete();
-                    return null;
+                    return 0;
                 }
                 return prev - 1;
             });
@@ -24,6 +36,14 @@ export const useCountdown = () => {
     const resetCountdown = useCallback(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         setCount(null);
+        onCompleteRef.current = null;
+    }, []);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
     }, []);
 
     return {

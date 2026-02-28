@@ -63,7 +63,8 @@ const PhotoPreview = ({ photos, selectedFrame, selectedFilter, layout, onRetake,
             <div
                 ref={stripRef}
                 className={cn(
-                    "relative w-72 p-5 shadow-2xl flex flex-col gap-5 transform transition-all duration-500",
+                    "relative p-5 shadow-2xl transform transition-all duration-500",
+                    layout === 'strip' ? "w-[500px] grid grid-cols-2 gap-4" : "w-72 flex flex-col gap-5",
                     frameClass
                 )}
             >

@@ -17,10 +17,10 @@ const LayoutSelection = ({ onSelect, onBack }) => {
         },
         {
             id: 'strip',
-            name: '4-Photo Strip',
+            name: '4-Photo Grid',
             icon: LayoutGrid,
-            desc: 'Classic photobooth style with 4 vertical shots.',
-            preview: 'aspect-[1/3] w-1/3 bg-slate-100 rounded-lg flex flex-col gap-1 p-1',
+            desc: 'Modern 2x2 grid layout for 4 shots.',
+            preview: 'aspect-[4/5] w-1/2 bg-slate-100 rounded-lg grid grid-cols-2 gap-1 p-1.5',
             color: 'from-purple-500 to-pink-500'
         }
     ];

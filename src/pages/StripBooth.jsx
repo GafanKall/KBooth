@@ -10,7 +10,7 @@ import Camera from '../components/Camera';
 import Countdown from '../components/Countdown';
 import PhotoPreview from '../components/PhotoPreview';
 import FrameSelector from '../components/FrameSelector';
-import FilterPanel from '../components/FilterPanel';
+import FilterPanel, { FILTERS } from '../components/FilterPanel';
 import Button from '../components/Button';
 import { cn } from '../utils/cn';
 
@@ -102,7 +102,7 @@ const StripBooth = ({ onBack }) => {
                     <div className="flex items-center gap-2">
                         <Sparkles className="text-primary-500 animate-pulse" />
                         <h2 className="text-2xl font-black text-slate-900 italic tracking-tight uppercase">
-                            4-Strip <span className="text-primary-500">Mode</span>
+                            4-Grid <span className="text-primary-500">Mode</span>
                         </h2>
                     </div>
                     <div className="w-24" />
@@ -112,8 +112,8 @@ const StripBooth = ({ onBack }) => {
                     <div className="lg:col-span-8">
                         {view === 'camera' ? (
                             <div className="flex flex-col items-center gap-8">
-                                {/* The Strip UI with individual camera windows */}
-                                <div className="bg-white p-4 shadow-2xl rounded-sm flex flex-col gap-3 w-64 border border-slate-100">
+                                {/* The Grid UI with individual camera windows */}
+                                <div className="bg-white p-4 shadow-2xl rounded-sm grid grid-cols-2 gap-3 w-full max-w-lg border border-slate-100">
                                     {[0, 1, 2, 3].map((i) => (
                                         <div
                                             key={i}
@@ -131,7 +131,7 @@ const StripBooth = ({ onBack }) => {
                                                 <img
                                                     src={capturedPhotos[i]}
                                                     className="w-full h-full object-cover"
-                                                    style={{ filter: useStore.getState().selectedFilter !== 'none' ? 'grayscale(1)' : 'none' }}
+                                                    style={FILTERS.find(f => f.id === selectedFilter)?.style || {}}
                                                     alt={`Shot ${i + 1}`}
                                                 />
                                             ) : (
