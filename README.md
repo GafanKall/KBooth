@@ -1,16 +1,58 @@
-# React + Vite
+# KBooth 📸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+KBooth is a modern, premium photobooth web application built with React and Tailwind CSS. Capture your best moments with retro style, apply filters, and choose from multiple layouts and frames.
 
-Currently, two official plugins are available:
+![Capture Mode](https://raw.githubusercontent.com/GafanKall/KBooth/master/src/assets/preview.png) *(Note: User can replace this with actual hosted image)*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- 🎞️ **Multi-Layout Support**: Choose between a Single Selfie (1x1) or a 4-Photo Grid (2x2).
+- 🎨 **Real-time Filters**: High-quality filters (Classic, Noir, Sepia, Cold) to enhance your photos.
+- 🖼️ **Premium Frames**: Various frame styles (White, Black, Wood, Glassmorphism).
+- 💾 **Local Gallery**: All sessions are saved locally using IndexedDB (no server required).
+- ⚡ **Lightning Fast**: Built with Vite and React 19 for a smooth, high-performance experience.
+- 📱 **Responsive Design**: Works beautifully on desktops and tablets.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## 🚀 Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend**: React 19, Vite
+- **Styling**: Tailwind CSS, Framer Motion (Animations)
+- **State Management**: Zustand
+- **Icons**: Lucide React
+- **Storage**: IndexedDB (via `idb`)
+- **Camera**: `react-webcam`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Installation & Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/GafanKall/KBooth.git
+   cd KBooth
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+## 🌐 Deployment
+
+KBooth is optimized for one-click deployment on **Vercel**. 
+Simply import your GitHub repository and Vercel will handle the rest!
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+Made with ❤️ by [GafanKall](https://github.com/GafanKall)
