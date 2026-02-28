@@ -1,0 +1,74 @@
+import Webcam from 'react-webcam';
+import { Camera as CameraIcon, FlipHorizontal, RefreshCw } from 'lucide-react';
+import Button from './Button';
+import { cn } from '../utils/cn';
+
+const Camera = ({
+    webcamRef,
+    devices,
+    activeDeviceId,
+    isMirrored,
+    error,
+    toggleMirror,
+    switchCamera,
+    isCapturing
+}) => {
+    const videoConstraints = {
+        width: 1280,
+        height: 720,
+        deviceId: activeDeviceId,
+    };
+
+    return (
+        <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-3xl bg-slate-900 shadow-2xl aspect-video border-4 border-white">
+            {error ? (
+                <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center">
+                    <CameraIcon size={48} className="mb-4 text-red-400" />
+                    <p className="text-lg font-medium">{error}</p>
+                </div>
+            ) : (
+                <>
+                    <Webcam
+                        audio={false}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={videoConstraints}
+                        mirrored={isMirrored}
+                        className="w-full h-full object-cover"
+                    />
+
+                    <div className="absolute top-4 right-4 flex gap-2">
+                        {devices.length > 1 && (
+                            <Button
+                                variant="secondary"
+                                size="icon"
+                                onClick={() => {
+                                    const currentIndex = devices.findIndex(d => d.deviceId === activeDeviceId);
+                                    const nextIndex = (currentIndex + 1) % devices.length;
+                                    switchCamera(devices[nextIndex].deviceId);
+                                }}
+                                className="bg-white/20 backdrop-blur-md border-none text-white hover:bg-white/40"
+                            >
+                                <RefreshCw size={20} />
+                            </Button>
+                        )}
+                        <Button
+                            variant="secondary"
+                            size="icon"
+                            onClick={toggleMirror}
+                            className="bg-white/20 backdrop-blur-md border-none text-white hover:bg-white/40"
+                        >
+                            <FlipHorizontal size={20} />
+                        </Button>
+                    </div>
+
+                    {isCapturing && (
+                        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px] pointer-events-none" />
+                    )}
+                </>
+            )}
+        </div>
+    );
+};
+
+export default Camera;

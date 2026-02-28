@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { Toaster } from 'sonner';
+import Home from './pages/Home';
+import Booth from './pages/Booth';
+import Gallery from './pages/Gallery';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState('home');
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen text-slate-900 font-sans selection:bg-primary-100 selection:text-primary-700">
+      <Toaster richColors position="top-center" />
+
+      {currentPage === 'home' && (
+        <Home
+          onStart={() => setCurrentPage('booth')}
+          onViewGallery={() => setCurrentPage('gallery')}
+        />
+      )}
+
+      {currentPage === 'booth' && (
+        <Booth onBack={() => setCurrentPage('home')} />
+      )}
+
+      {currentPage === 'gallery' && (
+        <Gallery onBack={() => setCurrentPage('home')} />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
