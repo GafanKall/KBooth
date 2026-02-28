@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles } from 'lucide-react';
 import { useStore } from '../store/useStore';
@@ -39,33 +39,26 @@ const StripBooth = ({ onBack }) => {
         setActiveSlot(0);
     }, [clearPhotos]);
 
-    const takeCapture = useCallback(() => {
-        const imageSrc = camera.capture();
-        if (imageSrc) {
-            addPhoto(imageSrc);
-            return true;
-        }
-        return false;
-    }, [camera, addPhoto]);
+    // Removed unused takeCapture
 
     const startSession = async () => {
         if (isCapturing) return;
 
         setIsCapturing(true);
         clearPhotos();
-        setActiveSlot(0);
 
         for (let i = 0; i < 4; i++) {
             setActiveSlot(i);
             await new Promise((resolve) => {
                 startCountdown(3, async () => {
-                    const success = takeCapture();
-                    if (success) {
+                    const imageSrc = camera.capture();
+                    if (imageSrc) {
+                        addPhoto(imageSrc);
                         toast.success(`Photo ${i + 1} captured!`, { position: 'bottom-right', duration: 800 });
                     } else {
-                        toast.error("Failed to capture photo");
+                        toast.error("Failed to capture photo " + (i + 1));
                     }
-                    // Wait a bit to let the user see their photo in the slot
+                    // Wait a moment so user can see their photo in the slot
                     setTimeout(resolve, 1000);
                 });
             });

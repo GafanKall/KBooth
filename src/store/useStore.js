@@ -8,9 +8,12 @@ export const useStore = create((set) => ({
     isCapturing: false,
 
     setCapturedPhotos: (photos) => set({ capturedPhotos: photos }),
+
+    // Simplified addPhoto to avoid premature slicing
     addPhoto: (photo) => set((state) => ({
-        capturedPhotos: [...state.capturedPhotos, photo].slice(-(state.layout === 'strip' ? 4 : 1))
+        capturedPhotos: [...state.capturedPhotos, photo]
     })),
+
     clearPhotos: () => set({ capturedPhotos: [] }),
 
     setSelectedFrame: (frame) => set({ selectedFrame: frame }),

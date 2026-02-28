@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { openDB } from 'idb';
 
 const DB_NAME = 'kbooth-db';
@@ -11,28 +12,30 @@ const dbPromise = openDB(DB_NAME, 1, {
     },
 });
 
+// Stable functions defined outside the hook
+const saveToDb = async (photoData) => {
+    const db = await dbPromise;
+    return db.add(STORE_NAME, {
+        ...photoData,
+        createdAt: new Date().toISOString(),
+    });
+};
+
+const getPhotosFromDb = async () => {
+    const db = await dbPromise;
+    return db.getAll(STORE_NAME);
+};
+
+const deletePhotoFromDb = async (id) => {
+    const db = await dbPromise;
+    return db.delete(STORE_NAME, id);
+};
+
 export const useStorage = () => {
-    const savePhoto = async (photoData) => {
-        const db = await dbPromise;
-        return db.add(STORE_NAME, {
-            ...photoData,
-            createdAt: new Date().toISOString(),
-        });
-    };
-
-    const getPhotos = async () => {
-        const db = await dbPromise;
-        return db.getAll(STORE_NAME);
-    };
-
-    const deletePhoto = async (id) => {
-        const db = await dbPromise;
-        return db.delete(STORE_NAME, id);
-    };
-
-    return {
-        savePhoto,
-        getPhotos,
-        deletePhoto,
-    };
+    // Return a memoized object to ensure stable function references
+    return useMemo(() => ({
+        savePhoto: saveToDb,
+        getPhotos: getPhotosFromDb,
+        deletePhoto: deletePhotoFromDb,
+    }), []);
 };
