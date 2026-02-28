@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles, RefreshCw } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useCountdown } from '../hooks/useCountdown';
@@ -74,7 +74,7 @@ const SelfieBooth = ({ onBack }) => {
             });
             toast.success('Selfie saved to gallery!');
             onBack();
-        } catch (err) {
+        } catch {
             toast.error('Failed to save to gallery.');
         }
     };

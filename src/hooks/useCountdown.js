@@ -5,13 +5,6 @@ export const useCountdown = () => {
     const onCompleteRef = useRef(null);
     const timerRef = useRef(null);
 
-    useEffect(() => {
-        if (count === 0) {
-            onCompleteRef.current?.();
-            setCount(null);
-        }
-    }, [count]);
-
     const startCountdown = useCallback((seconds, onComplete) => {
         onCompleteRef.current = onComplete;
         setCount(seconds);
@@ -26,7 +19,11 @@ export const useCountdown = () => {
                 }
                 if (prev <= 1) {
                     clearInterval(timerRef.current);
-                    return 0;
+                    // Call completion immediately instead of through useEffect
+                    if (onCompleteRef.current) {
+                        onCompleteRef.current();
+                    }
+                    return null;
                 }
                 return prev - 1;
             });

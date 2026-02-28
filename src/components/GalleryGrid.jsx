@@ -1,6 +1,5 @@
 import { Trash2, Calendar } from 'lucide-react';
 import Button from './Button';
-import { cn } from '../utils/cn';
 
 const GalleryGrid = ({ photos, onDelete }) => {
     if (photos.length === 0) {

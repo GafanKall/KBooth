@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Download, RefreshCw, Trash2, Smile, Type, Plus } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import Button from './Button';
 import { cn } from '../utils/cn';
 import { FILTERS } from './FilterPanel';
@@ -40,7 +40,7 @@ const PhotoPreview = ({ photos, selectedFrame, selectedFilter, layout, onRetake,
             link.href = dataUrl;
             link.click();
             toast.success('Download started!');
-        } catch (err) {
+        } catch {
             toast.error('Failed to generate download.');
         } finally {
             setIsGenerating(false);

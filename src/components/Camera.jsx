@@ -1,7 +1,6 @@
 import Webcam from 'react-webcam';
 import { Camera as CameraIcon, FlipHorizontal, RefreshCw } from 'lucide-react';
 import Button from './Button';
-import { cn } from '../utils/cn';
 
 const Camera = ({
     webcamRef,

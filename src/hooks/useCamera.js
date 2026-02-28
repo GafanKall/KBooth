@@ -60,7 +60,10 @@ export const useCamera = () => {
     }, []);
 
     useEffect(() => {
-        getDevices();
+        const init = async () => {
+            await getDevices();
+        };
+        init();
         return () => stopCamera();
     }, [getDevices, stopCamera]);
 

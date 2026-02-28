@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useCountdown } from '../hooks/useCountdown';
@@ -37,7 +37,7 @@ const StripBooth = ({ onBack }) => {
     useEffect(() => {
         clearPhotos();
         setActiveSlot(0);
-    }, []);
+    }, [clearPhotos]);
 
     const takeCapture = useCallback(() => {
         const imageSrc = camera.capture();
@@ -86,7 +86,7 @@ const StripBooth = ({ onBack }) => {
             });
             toast.success('Strip saved to gallery!');
             onBack();
-        } catch (err) {
+        } catch {
             toast.error('Failed to save to gallery.');
         }
     };

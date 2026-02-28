@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { Camera, Image as ImageIcon, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useStorage } from '../hooks/useStorage';
 import { toast } from 'sonner';
@@ -10,21 +10,21 @@ const Gallery = ({ onBack }) => {
     const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchPhotos = async () => {
+    const fetchPhotos = useCallback(async () => {
         setLoading(true);
         try {
             const data = await getPhotos();
             setSessions(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-        } catch (err) {
+        } catch {
             toast.error('Failed to load gallery.');
         } finally {
             setLoading(false);
         }
-    };
+    }, [getPhotos]);
 
     useEffect(() => {
         fetchPhotos();
-    }, []);
+    }, [fetchPhotos]);
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this session?')) {
@@ -32,7 +32,7 @@ const Gallery = ({ onBack }) => {
                 await deletePhoto(id);
                 toast.success('Session deleted!');
                 fetchPhotos();
-            } catch (err) {
+            } catch {
                 toast.error('Failed to delete session.');
             }
         }
