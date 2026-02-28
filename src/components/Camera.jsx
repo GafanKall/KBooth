@@ -14,13 +14,14 @@ const Camera = ({
     isCapturing
 }) => {
     const videoConstraints = {
-        width: 1280,
-        height: 720,
+        aspectRatio: 4 / 3,
+        width: { min: 640, ideal: 1280, max: 1920 },
+        height: { min: 480, ideal: 960, max: 1440 },
         deviceId: activeDeviceId,
     };
 
     return (
-        <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-3xl bg-slate-900 shadow-2xl aspect-video border-4 border-white">
+        <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-3xl bg-slate-900 shadow-2xl aspect-[4/3] border-4 border-white">
             {error ? (
                 <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center">
                     <CameraIcon size={48} className="mb-4 text-red-400" />

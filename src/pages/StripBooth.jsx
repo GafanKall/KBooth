@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useCountdown } from '../hooks/useCountdown';
@@ -11,20 +11,18 @@ import Countdown from '../components/Countdown';
 import PhotoPreview from '../components/PhotoPreview';
 import FrameSelector from '../components/FrameSelector';
 import FilterPanel from '../components/FilterPanel';
-import LayoutSelector from '../components/LayoutSelector';
 import Button from '../components/Button';
+import { cn } from '../utils/cn';
 
-const Booth = ({ onBack }) => {
+const StripBooth = ({ onBack }) => {
     const {
         capturedPhotos,
         addPhoto,
         clearPhotos,
         selectedFrame,
         selectedFilter,
-        layout,
         setSelectedFrame,
         setSelectedFilter,
-        setLayout,
         isCapturing,
         setIsCapturing,
     } = useStore();
@@ -32,16 +30,19 @@ const Booth = ({ onBack }) => {
     const camera = useCamera();
     const { count, startCountdown } = useCountdown();
     const { savePhoto } = useStorage();
-    const [view, setView] = useState('camera'); // 'camera' or 'preview'
+    const [view, setView] = useState('camera');
+    const [activeSlot, setActiveSlot] = useState(0);
+
+    // Reset photos on mount
+    useEffect(() => {
+        clearPhotos();
+        setActiveSlot(0);
+    }, []);
 
     const takeCapture = useCallback(() => {
         const imageSrc = camera.capture();
         if (imageSrc) {
             addPhoto(imageSrc);
-            toast.success(`Photo captured!`, {
-                position: 'bottom-right',
-                duration: 1000,
-            });
             return true;
         }
         return false;
@@ -52,23 +53,26 @@ const Booth = ({ onBack }) => {
 
         setIsCapturing(true);
         clearPhotos();
+        setActiveSlot(0);
 
-        const photoCount = layout === 'strip' ? 4 : 1;
-
-        // Sequence of photos
-        for (let i = 0; i < photoCount; i++) {
+        for (let i = 0; i < 4; i++) {
+            setActiveSlot(i);
             await new Promise((resolve) => {
                 startCountdown(3, async () => {
                     const success = takeCapture();
-                    if (!success) {
+                    if (success) {
+                        toast.success(`Photo ${i + 1} captured!`, { position: 'bottom-right', duration: 800 });
+                    } else {
                         toast.error("Failed to capture photo");
                     }
-                    setTimeout(resolve, 800); // Pause to see the shot
+                    // Wait a bit to let the user see their photo in the slot
+                    setTimeout(resolve, 1000);
                 });
             });
         }
 
         setIsCapturing(false);
+        setActiveSlot(-1);
         setView('preview');
     };
 
@@ -78,9 +82,9 @@ const Booth = ({ onBack }) => {
                 images: capturedPhotos,
                 frame: selectedFrame,
                 filter: selectedFilter,
-                layout: layout,
+                layout: 'strip'
             });
-            toast.success('Photobooth strip saved to your gallery!');
+            toast.success('Strip saved to gallery!');
             onBack();
         } catch (err) {
             toast.error('Failed to save to gallery.');
@@ -89,17 +93,16 @@ const Booth = ({ onBack }) => {
 
     return (
         <div className="min-h-screen bg-slate-50 p-6">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
+            <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <Button variant="ghost" onClick={onBack} disabled={isCapturing}>
                         <ArrowLeft className="mr-2" size={20} />
-                        Back to Home
+                        Back to Layouts
                     </Button>
                     <div className="flex items-center gap-2">
                         <Sparkles className="text-primary-500 animate-pulse" />
                         <h2 className="text-2xl font-black text-slate-900 italic tracking-tight uppercase">
-                            Capture <span className="text-primary-500">Mode</span>
+                            4-Strip <span className="text-primary-500">Mode</span>
                         </h2>
                     </div>
                     <div className="w-24" />
@@ -108,42 +111,56 @@ const Booth = ({ onBack }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     <div className="lg:col-span-8">
                         {view === 'camera' ? (
-                            <div className="space-y-6">
-                                <div className="relative">
-                                    <Camera
-                                        {...camera}
-                                        isCapturing={isCapturing}
-                                    />
-                                    <Countdown count={count} />
-
-                                    {!isCapturing && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="absolute inset-0 flex items-center justify-center bg-black/5 rounded-3xl"
+                            <div className="flex flex-col items-center gap-8">
+                                {/* The Strip UI with individual camera windows */}
+                                <div className="bg-white p-4 shadow-2xl rounded-sm flex flex-col gap-3 w-64 border border-slate-100">
+                                    {[0, 1, 2, 3].map((i) => (
+                                        <div
+                                            key={i}
+                                            className={cn(
+                                                "aspect-[4/3] bg-slate-950 rounded-sm overflow-hidden relative border-2 transition-all duration-300",
+                                                activeSlot === i ? "border-primary-500 ring-4 ring-primary-100 scale-105 z-10" : "border-transparent opacity-80"
+                                            )}
                                         >
-                                            <div className="text-white font-bold bg-black/40 px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
-                                                Click the button below to start!
-                                            </div>
-                                        </motion.div>
-                                    )}
+                                            {activeSlot === i ? (
+                                                <Camera
+                                                    {...camera}
+                                                    isCapturing={isCapturing}
+                                                />
+                                            ) : capturedPhotos[i] ? (
+                                                <img
+                                                    src={capturedPhotos[i]}
+                                                    className="w-full h-full object-cover"
+                                                    style={{ filter: useStore.getState().selectedFilter !== 'none' ? 'grayscale(1)' : 'none' }}
+                                                    alt={`Shot ${i + 1}`}
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-800">
+                                                    <span className="text-xs font-bold opacity-20 uppercase tracking-widest">Waiting...</span>
+                                                </div>
+                                            )}
+
+                                            {activeSlot === i && (
+                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <Countdown count={count} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
 
-                                <div className="flex justify-center flex-col items-center gap-4">
-                                    <Button
-                                        size="lg"
-                                        className="h-24 w-24 rounded-full shadow-2xl shadow-primary-200"
-                                        disabled={isCapturing}
-                                        onClick={startSession}
-                                    >
-                                        <div className="h-20 w-20 border-4 border-white rounded-full flex items-center justify-center transition-transform hover:scale-95 active:scale-90">
-                                            <CameraIcon size={36} />
-                                        </div>
-                                    </Button>
+                                <div className="flex flex-col items-center gap-4">
+                                    {!isCapturing && (
+                                        <Button
+                                            size="lg"
+                                            className="h-20 w-20 rounded-full shadow-2xl shadow-primary-200 bg-primary-500 text-white"
+                                            onClick={startSession}
+                                        >
+                                            <CameraIcon size={32} />
+                                        </Button>
+                                    )}
                                     <p className="text-slate-400 font-medium text-sm">
-                                        {isCapturing
-                                            ? `Capturing photo ${capturedPhotos.length + 1} of ${layout === 'strip' ? 4 : 1}`
-                                            : "Ready to Shoot"}
+                                        {isCapturing ? `Taking photo ${activeSlot + 1} of 4` : "Ready to Shoot"}
                                     </p>
                                 </div>
                             </div>
@@ -152,15 +169,17 @@ const Booth = ({ onBack }) => {
                                 photos={capturedPhotos}
                                 selectedFrame={selectedFrame}
                                 selectedFilter={selectedFilter}
-                                layout={layout}
+                                layout="strip"
                                 onRetake={() => {
                                     setView('camera');
                                     clearPhotos();
+                                    setActiveSlot(0);
                                 }}
                                 onSave={handleSave}
                                 onDelete={() => {
                                     clearPhotos();
                                     setView('camera');
+                                    setActiveSlot(0);
                                 }}
                             />
                         )}
@@ -177,15 +196,13 @@ const Booth = ({ onBack }) => {
                                 <h3 className="font-bold text-slate-800 uppercase text-sm tracking-widest">Customization</h3>
                             </div>
 
-                            <LayoutSelector selected={layout} onSelect={setLayout} />
                             <FrameSelector selected={selectedFrame} onSelect={setSelectedFrame} />
                             <FilterPanel selected={selectedFilter} onSelect={setSelectedFilter} />
 
                             <div className="pt-4 mt-auto">
                                 <div className="p-4 bg-primary-50 rounded-2xl border border-primary-100">
-                                    <p className="text-xs text-primary-700 leading-relaxed font-medium">
-                                        ✨ {layout === 'strip' ? 'Best for: 4-photo vertical strip layouts.' : 'Mode: Single Selfie (Webcam Toy style).'}
-                                        Your captures will be processed with the selected frame and filter.
+                                    <p className="text-xs text-primary-700 leading-relaxed font-medium text-center">
+                                        Classic 4-photo vertical strip.
                                     </p>
                                 </div>
                             </div>
@@ -193,8 +210,21 @@ const Booth = ({ onBack }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Minimalist overlay for camera feed in slots */}
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .aspect-\\[4\\/3\\] div > video {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: cover !important;
+                }
+                .aspect-\\[4\\/3\\] .absolute.top-4.right-4 {
+                    display: none !important;
+                }
+            `}} />
         </div>
     );
 };
 
-export default Booth;
+export default StripBooth;

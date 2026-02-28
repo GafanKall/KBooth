@@ -9,7 +9,7 @@ export const useStore = create((set) => ({
 
     setCapturedPhotos: (photos) => set({ capturedPhotos: photos }),
     addPhoto: (photo) => set((state) => ({
-        capturedPhotos: [...state.capturedPhotos, photo].slice(-4)
+        capturedPhotos: [...state.capturedPhotos, photo].slice(-(state.layout === 'strip' ? 4 : 1))
     })),
     clearPhotos: () => set({ capturedPhotos: [] }),
 

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Toaster } from 'sonner';
 import Home from './pages/Home';
-import Booth from './pages/Booth';
+import LayoutSelection from './pages/LayoutSelection';
+import SelfieBooth from './pages/SelfieBooth';
+import StripBooth from './pages/StripBooth';
 import Gallery from './pages/Gallery';
 
 function App() {
@@ -13,13 +15,26 @@ function App() {
 
       {currentPage === 'home' && (
         <Home
-          onStart={() => setCurrentPage('booth')}
+          onStart={() => setCurrentPage('layout-selection')}
           onViewGallery={() => setCurrentPage('gallery')}
         />
       )}
 
-      {currentPage === 'booth' && (
-        <Booth onBack={() => setCurrentPage('home')} />
+      {currentPage === 'layout-selection' && (
+        <LayoutSelection
+          onSelect={(layout) => {
+            setCurrentPage(layout === 'selfie' ? 'booth-selfie' : 'booth-strip');
+          }}
+          onBack={() => setCurrentPage('home')}
+        />
+      )}
+
+      {currentPage === 'booth-selfie' && (
+        <SelfieBooth onBack={() => setCurrentPage('layout-selection')} />
+      )}
+
+      {currentPage === 'booth-strip' && (
+        <StripBooth onBack={() => setCurrentPage('layout-selection')} />
       )}
 
       {currentPage === 'gallery' && (

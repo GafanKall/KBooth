@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles, RefreshCw } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useCountdown } from '../hooks/useCountdown';
 import { useStorage } from '../hooks/useStorage';
@@ -11,20 +11,17 @@ import Countdown from '../components/Countdown';
 import PhotoPreview from '../components/PhotoPreview';
 import FrameSelector from '../components/FrameSelector';
 import FilterPanel from '../components/FilterPanel';
-import LayoutSelector from '../components/LayoutSelector';
 import Button from '../components/Button';
 
-const Booth = ({ onBack }) => {
+const SelfieBooth = ({ onBack }) => {
     const {
         capturedPhotos,
         addPhoto,
         clearPhotos,
         selectedFrame,
         selectedFilter,
-        layout,
         setSelectedFrame,
         setSelectedFilter,
-        setLayout,
         isCapturing,
         setIsCapturing,
     } = useStore();
@@ -38,7 +35,7 @@ const Booth = ({ onBack }) => {
         const imageSrc = camera.capture();
         if (imageSrc) {
             addPhoto(imageSrc);
-            toast.success(`Photo captured!`, {
+            toast.success(`Selfie captured!`, {
                 position: 'bottom-right',
                 duration: 1000,
             });
@@ -53,20 +50,15 @@ const Booth = ({ onBack }) => {
         setIsCapturing(true);
         clearPhotos();
 
-        const photoCount = layout === 'strip' ? 4 : 1;
-
-        // Sequence of photos
-        for (let i = 0; i < photoCount; i++) {
-            await new Promise((resolve) => {
-                startCountdown(3, async () => {
-                    const success = takeCapture();
-                    if (!success) {
-                        toast.error("Failed to capture photo");
-                    }
-                    setTimeout(resolve, 800); // Pause to see the shot
-                });
+        await new Promise((resolve) => {
+            startCountdown(3, async () => {
+                const success = takeCapture();
+                if (!success) {
+                    toast.error("Failed to capture photo");
+                }
+                setTimeout(resolve, 800);
             });
-        }
+        });
 
         setIsCapturing(false);
         setView('preview');
@@ -78,9 +70,9 @@ const Booth = ({ onBack }) => {
                 images: capturedPhotos,
                 frame: selectedFrame,
                 filter: selectedFilter,
-                layout: layout,
+                layout: 'single'
             });
-            toast.success('Photobooth strip saved to your gallery!');
+            toast.success('Selfie saved to gallery!');
             onBack();
         } catch (err) {
             toast.error('Failed to save to gallery.');
@@ -94,12 +86,12 @@ const Booth = ({ onBack }) => {
                 <div className="flex items-center justify-between mb-8">
                     <Button variant="ghost" onClick={onBack} disabled={isCapturing}>
                         <ArrowLeft className="mr-2" size={20} />
-                        Back to Home
+                        Back to Layouts
                     </Button>
                     <div className="flex items-center gap-2">
                         <Sparkles className="text-primary-500 animate-pulse" />
                         <h2 className="text-2xl font-black text-slate-900 italic tracking-tight uppercase">
-                            Capture <span className="text-primary-500">Mode</span>
+                            Selfie <span className="text-primary-500">Mode</span>
                         </h2>
                     </div>
                     <div className="w-24" />
@@ -120,10 +112,10 @@ const Booth = ({ onBack }) => {
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="absolute inset-0 flex items-center justify-center bg-black/5 rounded-3xl"
+                                            className="absolute inset-x-0 bottom-10 flex items-center justify-center pointer-events-none"
                                         >
                                             <div className="text-white font-bold bg-black/40 px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
-                                                Click the button below to start!
+                                                Smile for the camera! 📸
                                             </div>
                                         </motion.div>
                                     )}
@@ -141,9 +133,7 @@ const Booth = ({ onBack }) => {
                                         </div>
                                     </Button>
                                     <p className="text-slate-400 font-medium text-sm">
-                                        {isCapturing
-                                            ? `Capturing photo ${capturedPhotos.length + 1} of ${layout === 'strip' ? 4 : 1}`
-                                            : "Ready to Shoot"}
+                                        {isCapturing ? "Get ready..." : "Ready to Shoot"}
                                     </p>
                                 </div>
                             </div>
@@ -152,7 +142,7 @@ const Booth = ({ onBack }) => {
                                 photos={capturedPhotos}
                                 selectedFrame={selectedFrame}
                                 selectedFilter={selectedFilter}
-                                layout={layout}
+                                layout="single"
                                 onRetake={() => {
                                     setView('camera');
                                     clearPhotos();
@@ -177,15 +167,13 @@ const Booth = ({ onBack }) => {
                                 <h3 className="font-bold text-slate-800 uppercase text-sm tracking-widest">Customization</h3>
                             </div>
 
-                            <LayoutSelector selected={layout} onSelect={setLayout} />
                             <FrameSelector selected={selectedFrame} onSelect={setSelectedFrame} />
                             <FilterPanel selected={selectedFilter} onSelect={setSelectedFilter} />
 
                             <div className="pt-4 mt-auto">
                                 <div className="p-4 bg-primary-50 rounded-2xl border border-primary-100">
                                     <p className="text-xs text-primary-700 leading-relaxed font-medium">
-                                        ✨ {layout === 'strip' ? 'Best for: 4-photo vertical strip layouts.' : 'Mode: Single Selfie (Webcam Toy style).'}
-                                        Your captures will be processed with the selected frame and filter.
+                                        ✨ Single Selfie Mode. High resolution 4:3 capture.
                                     </p>
                                 </div>
                             </div>
@@ -197,4 +185,4 @@ const Booth = ({ onBack }) => {
     );
 };
 
-export default Booth;
+export default SelfieBooth;

@@ -30,9 +30,9 @@ const Home = ({ onStart, onViewGallery }) => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button size="lg" onClick={onStart} className="shadow-xl shadow-primary-200 hover:scale-105">
-                        <Camera size={24} className="mr-3" />
-                        Start Photo Session
+                    <Button size="lg" onClick={onStart} className="bg-primary-500 text-white shadow-xl shadow-primary-200 hover:scale-105">
+                        <Camera size={24} className="mr-3 text-white" />
+                        <span className="text-white">Start Photo Session</span>
                     </Button>
                     <Button size="lg" variant="secondary" onClick={onViewGallery} className="shadow-lg hover:scale-105">
                         <ImageIcon size={24} className="mr-3" />

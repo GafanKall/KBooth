@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 const STICKERS = ['✨', '❤️', '🔥', '📸', '🌈', '⭐', '🎈', '🎉'];
 
-const PhotoPreview = ({ photos, selectedFrame, selectedFilter, onRetake, onSave, onDelete }) => {
+const PhotoPreview = ({ photos, selectedFrame, selectedFilter, layout, onRetake, onSave, onDelete }) => {
     const stripRef = useRef(null);
     const [stickers, setStickers] = useState([]);
     const [texts, setTexts] = useState([]);
@@ -34,7 +34,7 @@ const PhotoPreview = ({ photos, selectedFrame, selectedFilter, onRetake, onSave,
             const frameColor = frameColors[frameClass] || '#ffffff';
             const filterCSS = FILTERS.find(f => f.id === selectedFilter)?.style?.filter || 'none';
 
-            const dataUrl = await generatePhotoStrip(photos, frameColor, filterCSS);
+            const dataUrl = await generatePhotoStrip(photos, frameColor, filterCSS, layout);
             const link = document.createElement('a');
             link.download = `kbooth-${Date.now()}.jpg`;
             link.href = dataUrl;
@@ -67,8 +67,8 @@ const PhotoPreview = ({ photos, selectedFrame, selectedFilter, onRetake, onSave,
                     frameClass
                 )}
             >
-                {photos.map((photo, index) => (
-                    <div key={index} className="aspect-[3/4] overflow-hidden bg-slate-100 relative shadow-sm border border-slate-100/10">
+                {photos.slice(0, layout === 'strip' ? 4 : 1).map((photo, index) => (
+                    <div key={index} className="aspect-[4/3] overflow-hidden bg-slate-100 relative shadow-sm border border-slate-100/10">
                         <img
                             src={photo}
                             alt={`Capture ${index + 1}`}

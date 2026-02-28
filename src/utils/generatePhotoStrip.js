@@ -1,4 +1,4 @@
-export const generatePhotoStrip = async (photos, frameColor, filterStyle) => {
+export const generatePhotoStrip = async (photos, frameColor, filterStyle, layout = 'strip') => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -6,12 +6,14 @@ export const generatePhotoStrip = async (photos, frameColor, filterStyle) => {
 
     const width = 800;
     const padding = 40;
-    const spacing = 30;
+    const spacing = layout === 'strip' ? 30 : 0;
     const photoWidth = width - (padding * 2);
     const photoHeight = (photoWidth * 3) / 4;
-    const footerHeight = 100;
+    const footerHeight = layout === 'strip' ? 100 : 80;
 
-    const height = (padding * 2) + (photoHeight * 4) + (spacing * 3) + footerHeight;
+    const height = layout === 'strip'
+        ? (padding * 2) + (photoHeight * 4) + (spacing * 3) + footerHeight
+        : (padding * 2) + photoHeight + footerHeight;
 
     canvas.width = width;
     canvas.height = height;
@@ -41,13 +43,15 @@ export const generatePhotoStrip = async (photos, frameColor, filterStyle) => {
 
         ctx.drawImage(img, padding, y, photoWidth, photoHeight);
         ctx.filter = 'none'; // Reset filter
+
+        if (layout === 'single') break; // Only draw one if single
     }
 
     // Draw Footer Text
     ctx.fillStyle = '#94a3b8';
     ctx.font = 'italic 32px Georgia, serif';
     ctx.textAlign = 'center';
-    ctx.fillText('KBooth © 2026', width / 2, height - 40);
+    ctx.fillText('KBooth © 2026', width / 2, height - (layout === 'strip' ? 40 : 30));
 
     return canvas.toDataURL('image/jpeg', 0.9);
 };
