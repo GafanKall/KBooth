@@ -7,8 +7,10 @@ KBooth is a modern, premium photobooth web application built with React and Tail
 ## ✨ Features
 
 - 🎞️ **Multi-Layout Support**: Choose between a Single Selfie (1x1) or a 4-Photo Grid (2x2).
+- ⏱️ **Flexible Timer**: Choose between 3s, 5s, or 10s countdown for the perfect shot.
 - 🎨 **Real-time Filters**: High-quality filters (Classic, Noir, Sepia, Cold) to enhance your photos.
 - 🖼️ **Premium Frames**: Various frame styles (White, Black, Wood, Glassmorphism).
+- 📸 **Camera Control**: Manual camera permission trigger and troubleshooting tools for a seamless experience.
 - 💾 **Local Gallery**: All sessions are saved locally using IndexedDB (no server required).
 - ⚡ **Lightning Fast**: Built with Vite and React 19 for a smooth, high-performance experience.
 - 📱 **Responsive Design**: Works beautifully on desktops and tablets.
