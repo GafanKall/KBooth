@@ -12,6 +12,7 @@ import PhotoPreview from '../components/PhotoPreview';
 import FrameSelector from '../components/FrameSelector';
 import FilterPanel from '../components/FilterPanel';
 import Button from '../components/Button';
+import TimerSelector from '../components/TimerSelector';
 
 const SelfieBooth = ({ onBack }) => {
     const {
@@ -24,6 +25,7 @@ const SelfieBooth = ({ onBack }) => {
         setSelectedFilter,
         isCapturing,
         setIsCapturing,
+        countdownDuration,
     } = useStore();
 
     const camera = useCamera();
@@ -51,7 +53,7 @@ const SelfieBooth = ({ onBack }) => {
         clearPhotos();
 
         await new Promise((resolve) => {
-            startCountdown(3, async () => {
+            startCountdown(countdownDuration, async () => {
                 const success = takeCapture();
                 if (!success) {
                     toast.error("Failed to capture photo");
@@ -169,6 +171,24 @@ const SelfieBooth = ({ onBack }) => {
 
                             <FrameSelector selected={selectedFrame} onSelect={setSelectedFrame} />
                             <FilterPanel selected={selectedFilter} onSelect={setSelectedFilter} />
+                            <TimerSelector />
+
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <CameraIcon size={16} className="text-slate-400" />
+                                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Camera Troubleshooting</span>
+                                </div>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="w-full justify-start text-xs"
+                                    onClick={() => camera.startCamera()}
+                                    disabled={isCapturing}
+                                >
+                                    <RefreshCw className="mr-2" size={14} />
+                                    Request Camera Permission
+                                </Button>
+                            </div>
 
                             <div className="pt-4 mt-auto">
                                 <div className="p-4 bg-primary-50 rounded-2xl border border-primary-100">

@@ -10,7 +10,9 @@ const Camera = ({
     error,
     toggleMirror,
     switchCamera,
-    isCapturing
+    isCapturing,
+    stream,
+    startCamera
 }) => {
     const videoConstraints = {
         aspectRatio: 4 / 3,
@@ -25,6 +27,27 @@ const Camera = ({
                 <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center">
                     <CameraIcon size={48} className="mb-4 text-red-400" />
                     <p className="text-lg font-medium">{error}</p>
+                    <Button
+                        variant="secondary"
+                        className="mt-6 bg-white/20 border-none text-white hover:bg-white/30"
+                        onClick={() => startCamera()}
+                    >
+                        <RefreshCw className="mr-2" size={18} />
+                        Try Again
+                    </Button>
+                </div>
+            ) : !stream ? (
+                <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center animate-pulse">
+                    <CameraIcon size={64} className="mb-6 text-slate-700" />
+                    <p className="text-xl font-bold text-slate-400 uppercase tracking-widest mb-8">Camera Offline</p>
+                    <Button
+                        size="lg"
+                        className="shadow-2xl shadow-primary-500/20"
+                        onClick={() => startCamera()}
+                    >
+                        <CameraIcon className="mr-2" size={20} />
+                        Enable Camera
+                    </Button>
                 </div>
             ) : (
                 <>

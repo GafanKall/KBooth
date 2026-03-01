@@ -6,6 +6,7 @@ export const useStore = create((set) => ({
     selectedFilter: 'none',
     layout: 'strip', // 'strip' (4 photos) or 'single'
     isCapturing: false,
+    countdownDuration: 3,
 
     setCapturedPhotos: (photos) => set({ capturedPhotos: photos }),
 
@@ -20,4 +21,5 @@ export const useStore = create((set) => ({
     setSelectedFilter: (filter) => set({ selectedFilter: filter }),
     setLayout: (layout) => set({ layout }),
     setIsCapturing: (isCapturing) => set({ isCapturing }),
+    setCountdownDuration: (duration) => set({ countdownDuration: duration }),
 }));
