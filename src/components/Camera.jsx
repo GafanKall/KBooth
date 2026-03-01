@@ -12,7 +12,8 @@ const Camera = ({
     switchCamera,
     isCapturing,
     stream,
-    startCamera
+    startCamera,
+    compact = false,
 }) => {
     const videoConstraints = {
         aspectRatio: 4 / 3,
@@ -24,30 +25,43 @@ const Camera = ({
     return (
         <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-3xl bg-slate-900 shadow-2xl aspect-[4/3] border-4 border-white">
             {error ? (
-                <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center">
-                    <CameraIcon size={48} className="mb-4 text-red-400" />
-                    <p className="text-lg font-medium">{error}</p>
-                    <Button
-                        variant="secondary"
-                        className="mt-6 bg-white/20 border-none text-white hover:bg-white/30"
+                <div className="flex flex-col items-center justify-center h-full text-white p-3 text-center">
+                    <CameraIcon size={compact ? 20 : 48} className={compact ? 'mb-1 text-red-400' : 'mb-4 text-red-400'} />
+                    {!compact && <p className="text-lg font-medium">{error}</p>}
+                    <button
+                        className="mt-2 text-[10px] font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         onClick={() => startCamera()}
                     >
-                        <RefreshCw className="mr-2" size={18} />
-                        Try Again
-                    </Button>
+                        {compact ? '↺ Retry' : 'Try Again'}
+                    </button>
                 </div>
             ) : !stream ? (
-                <div className="flex flex-col items-center justify-center h-full text-white p-6 text-center animate-pulse">
-                    <CameraIcon size={64} className="mb-6 text-slate-700" />
-                    <p className="text-xl font-bold text-slate-400 uppercase tracking-widest mb-8">Camera Offline</p>
-                    <Button
-                        size="lg"
-                        className="shadow-2xl shadow-primary-500/20"
-                        onClick={() => startCamera()}
-                    >
-                        <CameraIcon className="mr-2" size={20} />
-                        Enable Camera
-                    </Button>
+                <div className="flex flex-col items-center justify-center h-full text-white text-center animate-pulse">
+                    {compact ? (
+                        <>
+                            <CameraIcon size={18} className="mb-1 text-slate-600" />
+                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">No Camera</p>
+                            <button
+                                className="px-2 py-1 text-[9px] font-bold uppercase tracking-wider bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                                onClick={() => startCamera()}
+                            >
+                                Enable
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <CameraIcon size={64} className="mb-6 text-slate-700" />
+                            <p className="text-xl font-bold text-slate-400 uppercase tracking-widest mb-8">Camera Offline</p>
+                            <Button
+                                size="lg"
+                                className="shadow-2xl shadow-primary-500/20"
+                                onClick={() => startCamera()}
+                            >
+                                <CameraIcon className="mr-2" size={20} />
+                                Enable Camera
+                            </Button>
+                        </>
+                    )}
                 </div>
             ) : (
                 <>

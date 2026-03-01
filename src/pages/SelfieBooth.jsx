@@ -13,6 +13,8 @@ import FrameSelector from '../components/FrameSelector';
 import FilterPanel from '../components/FilterPanel';
 import Button from '../components/Button';
 import TimerSelector from '../components/TimerSelector';
+import { FRAMES } from '../constants';
+import { cn } from '../utils/cn';
 
 const SelfieBooth = ({ onBack }) => {
     const {
@@ -103,24 +105,29 @@ const SelfieBooth = ({ onBack }) => {
                     <div className="lg:col-span-8">
                         {view === 'camera' ? (
                             <div className="space-y-6">
-                                <div className="relative">
-                                    <Camera
-                                        {...camera}
-                                        isCapturing={isCapturing}
-                                    />
-                                    <Countdown count={count} />
+                                <div className={cn(
+                                    "transition-colors duration-300 p-3 rounded-3xl shadow-2xl",
+                                    FRAMES.find(f => f.id === selectedFrame)?.class || 'bg-white'
+                                )}>
+                                    <div className="relative">
+                                        <Camera
+                                            {...camera}
+                                            isCapturing={isCapturing}
+                                        />
+                                        <Countdown count={count} />
 
-                                    {!isCapturing && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="absolute inset-x-0 bottom-10 flex items-center justify-center pointer-events-none"
-                                        >
-                                            <div className="text-white font-bold bg-black/40 px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
-                                                Smile for the camera! 📸
-                                            </div>
-                                        </motion.div>
-                                    )}
+                                        {!isCapturing && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="absolute inset-x-0 bottom-10 flex items-center justify-center pointer-events-none"
+                                            >
+                                                <div className="text-white font-bold bg-black/40 px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
+                                                    Smile for the camera! 📸
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="flex justify-center flex-col items-center gap-4">
@@ -201,7 +208,7 @@ const SelfieBooth = ({ onBack }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

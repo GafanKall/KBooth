@@ -3,8 +3,7 @@ import { Download, RefreshCw, Trash2, Smile, Type, Plus } from 'lucide-react';
 import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import Button from './Button';
 import { cn } from '../utils/cn';
-import { FILTERS } from './FilterPanel';
-import { FRAMES } from './FrameSelector';
+import { FILTERS, FRAMES } from '../constants';
 import { generatePhotoStrip } from '../utils/generatePhotoStrip';
 import { toast } from 'sonner';
 

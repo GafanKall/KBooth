@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
-import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Camera as CameraIcon, Settings2, Sparkles, RefreshCw } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useCountdown } from '../hooks/useCountdown';
 import { useStorage } from '../hooks/useStorage';
@@ -10,7 +10,8 @@ import Camera from '../components/Camera';
 import Countdown from '../components/Countdown';
 import PhotoPreview from '../components/PhotoPreview';
 import FrameSelector from '../components/FrameSelector';
-import FilterPanel, { FILTERS } from '../components/FilterPanel';
+import FilterPanel from '../components/FilterPanel';
+import { FILTERS, FRAMES } from '../constants';
 import Button from '../components/Button';
 import TimerSelector from '../components/TimerSelector';
 import { cn } from '../utils/cn';
@@ -108,7 +109,7 @@ const StripBooth = ({ onBack }) => {
                         {view === 'camera' ? (
                             <div className="flex flex-col items-center gap-8">
                                 {/* The Grid UI with individual camera windows */}
-                                <div className="bg-white p-4 shadow-2xl rounded-sm grid grid-cols-2 gap-3 w-full max-w-lg border border-slate-100">
+                                <div className={cn("transition-colors duration-300 p-4 shadow-2xl rounded-sm grid grid-cols-2 gap-3 w-full max-w-lg border border-slate-100", FRAMES.find(f => f.id === selectedFrame)?.class || 'bg-white')}>
                                     {[0, 1, 2, 3].map((i) => (
                                         <div
                                             key={i}
@@ -121,6 +122,7 @@ const StripBooth = ({ onBack }) => {
                                                 <Camera
                                                     {...camera}
                                                     isCapturing={isCapturing}
+                                                    compact={true}
                                                 />
                                             ) : capturedPhotos[i] ? (
                                                 <img

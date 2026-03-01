@@ -1,13 +1,5 @@
 import { cn } from '../utils/cn';
-
-const FRAMES = [
-    { id: 'classic-white', name: 'Classic White', class: 'bg-white' },
-    { id: 'modern-black', name: 'Modern Black', class: 'bg-slate-900' },
-    { id: 'soft-blue', name: 'Soft Blue', class: 'bg-blue-100' },
-    { id: 'sweet-pink', name: 'Sweet Pink', class: 'bg-pink-100' },
-    { id: 'retro-cream', name: 'Retro Cream', class: 'bg-orange-50' },
-    { id: 'vibrant-purple', name: 'Vibrant Purple', class: 'bg-purple-100' },
-];
+import { FRAMES } from '../constants';
 
 const FrameSelector = ({ selected, onSelect }) => {
     return (
