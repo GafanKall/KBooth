@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { Camera, Image as ImageIcon, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
+import polaroid1 from '../assets/polaroid_1.png';
+import polaroid2 from '../assets/polaroid_2.png';
+import polaroid3 from '../assets/polaroid_3.png';
 
 const Home = ({ onStart, onViewGallery }) => {
     return (
@@ -49,12 +52,14 @@ const Home = ({ onStart, onViewGallery }) => {
                 className="mt-20 relative px-4"
             >
                 <div className="flex gap-4 -rotate-3 hover:rotate-0 transition-transform duration-500">
-                    {[1, 2, 3].map((i) => (
+                    {[polaroid1, polaroid2, polaroid3].map((img, i) => (
                         <div key={i} className="w-40 h-56 bg-white p-2 shadow-2xl rounded-sm border border-slate-100 flex flex-col gap-2">
                             <div className="flex-1 bg-slate-100 rounded-sm overflow-hidden">
-                                <div className="w-full h-full bg-primary-50 flex items-center justify-center text-primary-200">
-                                    <ImageIcon size={40} />
-                                </div>
+                                <img
+                                    src={img}
+                                    alt={`Polaroid ${i + 1}`}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <div className="h-4 w-2/3 bg-slate-50 rounded mx-auto" />
                         </div>

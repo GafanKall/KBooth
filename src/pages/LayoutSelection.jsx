@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { LayoutGrid, User, ArrowLeft, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
 import { useStore } from '../store/useStore';
+import layoutSelfie from '../assets/layout_selfie.png';
+import layoutGrid from '../assets/layout_grid.png';
 
 const LayoutSelection = ({ onSelect, onBack }) => {
     const { setLayout } = useStore();
@@ -12,7 +14,7 @@ const LayoutSelection = ({ onSelect, onBack }) => {
             name: 'Single Selfie',
             icon: User,
             desc: 'Large single photo, perfect for your best portrait.',
-            preview: 'aspect-[4/3] w-full bg-slate-100 rounded-lg flex items-center justify-center',
+            previewImg: layoutSelfie,
             color: 'from-blue-500 to-cyan-400'
         },
         {
@@ -20,7 +22,7 @@ const LayoutSelection = ({ onSelect, onBack }) => {
             name: '4-Photo Grid',
             icon: LayoutGrid,
             desc: 'Modern 2x2 grid layout for 4 shots.',
-            preview: 'aspect-[4/5] w-1/2 bg-slate-100 rounded-lg grid grid-cols-2 gap-1 p-1.5',
+            previewImg: layoutGrid,
             color: 'from-purple-500 to-pink-500'
         }
     ];
@@ -77,17 +79,13 @@ const LayoutSelection = ({ onSelect, onBack }) => {
 
                                     <div className="mt-auto">
                                         <div className="flex justify-center mb-8">
-                                            {layout.id === 'selfie' ? (
-                                                <div className={layout.preview}>
-                                                    <div className="w-12 h-12 rounded-full bg-slate-200" />
-                                                </div>
-                                            ) : (
-                                                <div className={layout.preview}>
-                                                    {[1, 2, 3, 4].map(i => (
-                                                        <div key={i} className="flex-1 bg-slate-200 rounded-sm" />
-                                                    ))}
-                                                </div>
-                                            )}
+                                            <div className="w-full rounded-xl overflow-hidden shadow-md">
+                                                <img
+                                                    src={layout.previewImg}
+                                                    alt={layout.name}
+                                                    className="w-full h-48 object-cover"
+                                                />
+                                            </div>
                                         </div>
 
                                         <Button className="w-full bg-slate-900 text-white group-hover:bg-primary-500 transition-colors rounded-xl">
