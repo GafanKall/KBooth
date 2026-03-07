@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2, Download } from 'lucide-react';
 import { useStorage } from '../hooks/useStorage';
 import { toast } from 'sonner';
 import GalleryGrid from '../components/GalleryGrid';
@@ -38,6 +38,26 @@ const Gallery = ({ onBack }) => {
         }
     };
 
+    const handleDownload = (session) => {
+        if (session.stripImage) {
+            // Download the final processed strip (with frame, filter, watermark)
+            const link = document.createElement('a');
+            link.href = session.stripImage;
+            link.download = `kbooth_${session.id}_strip.jpg`;
+            link.click();
+            toast.success('Photo strip downloaded!');
+        } else {
+            // Fallback for old sessions saved before this fix
+            session.images.forEach((imgSrc, idx) => {
+                const link = document.createElement('a');
+                link.href = imgSrc;
+                link.download = `kbooth_${session.id}_photo_${idx + 1}.png`;
+                link.click();
+            });
+            toast.success(`${session.images.length} photo(s) downloaded!`);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-white p-6 md:p-12">
             <div className="max-w-6xl mx-auto">
@@ -57,7 +77,7 @@ const Gallery = ({ onBack }) => {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500" />
                     </div>
                 ) : (
-                    <GalleryGrid photos={sessions} onDelete={handleDelete} />
+                    <GalleryGrid photos={sessions} onDelete={handleDelete} onDownload={handleDownload} />
                 )}
             </div>
         </div>

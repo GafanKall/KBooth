@@ -14,6 +14,7 @@ const Camera = ({
     stream,
     startCamera,
     compact = false,
+    filterStyle = {},
 }) => {
     const videoConstraints = {
         aspectRatio: 4 / 3,
@@ -72,6 +73,7 @@ const Camera = ({
                         videoConstraints={videoConstraints}
                         mirrored={isMirrored}
                         className="w-full h-full object-cover"
+                        style={filterStyle}
                     />
 
                     <div className="absolute top-4 right-4 flex gap-2">

@@ -15,6 +15,7 @@ import { FILTERS, FRAMES } from '../constants';
 import Button from '../components/Button';
 import TimerSelector from '../components/TimerSelector';
 import { cn } from '../utils/cn';
+import { generatePhotoStrip } from '../utils/generatePhotoStrip';
 
 const StripBooth = ({ onBack }) => {
     const {
@@ -74,8 +75,21 @@ const StripBooth = ({ onBack }) => {
 
     const handleSave = async () => {
         try {
+            const frameObj = FRAMES.find(f => f.id === selectedFrame);
+            const filterObj = FILTERS.find(f => f.id === selectedFilter);
+            const frameColor = frameObj?.hex ?? '#ffffff';
+            const filterStyle = filterObj?.canvas ?? null;
+
+            const stripImage = await generatePhotoStrip(
+                capturedPhotos,
+                frameColor,
+                filterStyle,
+                'strip'
+            );
+
             await savePhoto({
                 images: capturedPhotos,
+                stripImage,
                 frame: selectedFrame,
                 filter: selectedFilter,
                 layout: 'strip'
@@ -123,6 +137,7 @@ const StripBooth = ({ onBack }) => {
                                                     {...camera}
                                                     isCapturing={isCapturing}
                                                     compact={true}
+                                                    filterStyle={FILTERS.find(f => f.id === selectedFilter)?.style || {}}
                                                 />
                                             ) : capturedPhotos[i] ? (
                                                 <img

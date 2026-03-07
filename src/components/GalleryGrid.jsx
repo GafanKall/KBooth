@@ -1,7 +1,7 @@
-import { Trash2, Calendar } from 'lucide-react';
+import { Trash2, Calendar, Download } from 'lucide-react';
 import Button from './Button';
 
-const GalleryGrid = ({ photos, onDelete }) => {
+const GalleryGrid = ({ photos, onDelete, onDownload }) => {
     if (photos.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
@@ -35,14 +35,26 @@ const GalleryGrid = ({ photos, onDelete }) => {
                             <Calendar size={12} />
                             {new Date(session.createdAt).toLocaleDateString()}
                         </div>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => onDelete(session.id)}
-                            className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8"
-                        >
-                            <Trash2 size={14} />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => onDownload(session)}
+                                className="text-primary-400 hover:text-primary-600 hover:bg-primary-50 h-8 w-8"
+                                title="Download photos"
+                            >
+                                <Download size={14} />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => onDelete(session.id)}
+                                className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8"
+                                title="Delete session"
+                            >
+                                <Trash2 size={14} />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             ))}

@@ -13,8 +13,9 @@ import FrameSelector from '../components/FrameSelector';
 import FilterPanel from '../components/FilterPanel';
 import Button from '../components/Button';
 import TimerSelector from '../components/TimerSelector';
-import { FRAMES } from '../constants';
+import { FRAMES, FILTERS } from '../constants';
 import { cn } from '../utils/cn';
+import { generatePhotoStrip } from '../utils/generatePhotoStrip';
 
 const SelfieBooth = ({ onBack }) => {
     const {
@@ -70,8 +71,21 @@ const SelfieBooth = ({ onBack }) => {
 
     const handleSave = async () => {
         try {
+            const frameObj = FRAMES.find(f => f.id === selectedFrame);
+            const filterObj = FILTERS.find(f => f.id === selectedFilter);
+            const frameColor = frameObj?.hex ?? '#ffffff';
+            const filterStyle = filterObj?.canvas ?? null;
+
+            const stripImage = await generatePhotoStrip(
+                capturedPhotos,
+                frameColor,
+                filterStyle,
+                'single'
+            );
+
             await savePhoto({
                 images: capturedPhotos,
+                stripImage,
                 frame: selectedFrame,
                 filter: selectedFilter,
                 layout: 'single'
@@ -113,6 +127,7 @@ const SelfieBooth = ({ onBack }) => {
                                         <Camera
                                             {...camera}
                                             isCapturing={isCapturing}
+                                            filterStyle={FILTERS.find(f => f.id === selectedFilter)?.style || {}}
                                         />
                                         <Countdown count={count} />
 
