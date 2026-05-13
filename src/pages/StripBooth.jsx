@@ -205,29 +205,40 @@ const StripBooth = ({ onBack }) => {
                         >
                             <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
                                 <Settings2 className="text-slate-400" size={20} />
-                                <h3 className="font-bold text-slate-800 uppercase text-sm tracking-widest">Customization</h3>
+                                <h3 className="font-bold text-slate-800 uppercase text-sm tracking-widest">
+                                    {view === 'camera' ? 'Camera Settings' : 'Customization'}
+                                </h3>
                             </div>
 
-                            <FrameSelector selected={selectedFrame} onSelect={setSelectedFrame} />
-                            <FilterPanel selected={selectedFilter} onSelect={setSelectedFilter} />
-                            <TimerSelector />
+                            {view === 'preview' && (
+                                <>
+                                    <FrameSelector selected={selectedFrame} onSelect={setSelectedFrame} />
+                                    <FilterPanel selected={selectedFilter} onSelect={setSelectedFilter} />
+                                </>
+                            )}
 
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <CameraIcon size={16} className="text-slate-400" />
-                                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Camera Troubleshooting</span>
-                                </div>
-                                <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    className="w-full justify-start text-xs"
-                                    onClick={() => camera.startCamera()}
-                                    disabled={isCapturing}
-                                >
-                                    <RefreshCw className="mr-2" size={14} />
-                                    Request Camera Permission
-                                </Button>
-                            </div>
+                            {view === 'camera' && (
+                                <>
+                                    <TimerSelector />
+
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <CameraIcon size={16} className="text-slate-400" />
+                                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Camera Troubleshooting</span>
+                                        </div>
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            className="w-full justify-start text-xs"
+                                            onClick={() => camera.startCamera()}
+                                            disabled={isCapturing}
+                                        >
+                                            <RefreshCw className="mr-2" size={14} />
+                                            Request Camera Permission
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
 
                             <div className="pt-4 mt-auto">
                                 <div className="p-4 bg-primary-50 rounded-2xl border border-primary-100">
